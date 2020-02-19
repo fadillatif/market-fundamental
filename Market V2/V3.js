@@ -1,8 +1,8 @@
 var arrProduct = [
-    { id: 1579581080923,category: 'Fast Food' , name: "Noodle", price: 3500, stock : 9},
-    { id: 1579581081130,category: 'Electronic' , name: "Headphone", price: 4300000, stock :8 },
-    { id: 1579581081342,category: 'Cloth' , name: "Hoodie", price: 300000, stock :7 },
-    { id: 1579581081577,category: 'Fruit' , name: "Apple", price: 10000, stock :8 }
+    { id: 1579581080923,category: 'Fast Food' , name: "Noodle", price: 3500, stock : 9, status : 0},
+    { id: 1579581081130,category: 'Electronic' , name: "Headphone", price: 4300000, stock :8, status : 0 },
+    { id: 1579581081342,category: 'Cloth' , name: "Hoodie", price: 300000, stock :7, status : 0 },
+    { id: 1579581081577,category: 'Fruit' , name: "Apple", price: 10000, stock :8, status : 0 }
 ];
 
 var arrCategory = ["All", "Fast Food", "Electronic", "Cloth", "Fruit"];
@@ -13,12 +13,13 @@ var arrCart = []
 var fnRenderList = (data, idx) => {
     // Mapping product
     // obj : {id, category, name, price, stock}
+    
     var resProduct = data.map((obj) => {
         // jika id product sama dengan idx
         if(obj.id == idx){
             // Textbox
             return `
-                <tr>
+            <tr>
                     <td>${obj}</td>
                     <td><input disabled type="text" value="${obj.category}"></td>
                     <td><input id="nameEdit" type="text" value="${obj.name}"></td>
@@ -26,37 +27,58 @@ var fnRenderList = (data, idx) => {
                     <td><input id="stockEdit" type="text" value="${obj.stock}"></td>
                     <td>
                         <input disabled type="button" value="Add">
-                    </td>
+                        </td>
                     <td>
                         <input onclick="fnSave(${obj.id})" type="button" value="Save">
                     </td>
                     <td>
                         <input onclick="fnEditCancel()" type="button" value="Cancel">
-                    </td>
+                        </td>
                 </tr>
             `
-
-        } else {
+        }  else if(obj.status == 1) {
             // String
-            return `
-                <tr>
-                    <td>${obj.id}</td>
-                    <td>${obj.category}</td>
-                    <td>${obj.name}</td>
-                    <td>${obj.price}</td>
-                    <td>${obj.stock}</td>
-                    <td>
-                        <input onclick="fnAdd(${obj.id})" type="button" value="Add">
-                    </td>
-                    <td>
-                        <input onclick="fnDelete(${obj.id})" type="button" value="Delete">
-                    </td>
-                    <td>
-                        <input onclick="fnEditCancel(${obj.id})" type="button" value="Edit">
-                    </td>
-                </tr>
+              return `
+            <tr>
+                <td>${obj.id}</td>
+                <td>${obj.category}</td>
+                <td>${obj.name}</td>
+                <td>${obj.price}</td>
+                <td>${obj.stock}</td>
+                <td>
+                    <input onclick="fnAdd(${obj.id})" type="button" value="Add">
+                </td>
+                <td>
+                    <input disabled type="button" value="Delete">
+                </td>
+                <td>
+                    <input disabled type="button" value="Edit">
+                </td>
+            </tr>
             `
         }
+        else {
+            return `
+            <tr>
+                <td>${obj.id}</td>
+                <td>${obj.category}</td>
+                <td>${obj.name}</td>
+                <td>${obj.price}</td>
+                <td>${obj.stock}</td>
+                <td>
+                    <input onclick="fnAdd(${obj.id})" type="button" value="Add">
+                </td>
+                <td>
+                    <input onclick="fnDelete" type="button" value="Delete">
+                </td>
+                <td>
+                    <input onclick="fnEdit" type="button" value="Edit">
+                </td>
+            </tr>
+            `
+        }
+
+        
     })
 
     // Mapping category
@@ -121,7 +143,6 @@ var fnRenderFilter = (data) => {
     // render product
     document.getElementById('render').innerHTML = resProduct.join("")
 }
-
 
 // Input data
 var fnInputData = () => {
@@ -268,7 +289,8 @@ var fnDeleteCart = (idx) => {
        foundCart.qty --
        selectedProduct.stock ++
    }
-   if(foundCart.qty ==0 ){
+   if(foundCart.qty == 0 ){
+    selectedProduct.status = 0
     arrCart = arrCart.filter((val) => {
         return val.id != idx
     })  
@@ -295,7 +317,8 @@ var fnAdd = (idx) => {
     if(foundCart == undefined){
         // tambahkan product tersebut ke cart
         arrCart.push({...selectedProduct, qty : 1})
-        selectedProduct.stock --
+        selectedProduct.stock -- 
+        selectedProduct.status = 1
 
         
     } else {
