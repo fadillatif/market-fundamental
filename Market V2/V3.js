@@ -134,6 +134,9 @@ var fnRenderFilter = (data) => {
                     <input onclick="funDelete(${obj.id})" type="button" value="Delete">
                 </td>
                 <td>
+                    <input onclick="fnAdd(${obj.id})" type="button" value="Add">
+                </td>
+                <td>
                     <input onclick="funEditCancel(${obj.id})" type="button" value="Edit">
                 </td>
             </tr>
