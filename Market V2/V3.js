@@ -384,45 +384,39 @@ var funPayment = () => {
     `<h3>SubTotal : ${subTotal}</h3>` + 
     `<h3>PPN : ${ppn}</h3>` + 
     `<h3>Total : ${finalTotal}</h3>` +
-    `<p>Kode Promo : <input type="text" id="promo" placeholder="Jika Ada"></p>` +
-    `<p><input type="button" value="Promo" onclick="funPromo()"></p>`
-}
+    `<p>Pembayaran : <input type="text" id="bayar" placeholder="Masukan uang anda"></p>` +
+    `<p><input type="button" value="BAYAR!" onclick="pembayaran()"></p>`
+}   
 
-// Kode Promo
-var funPromo = () => {
-    if(document.getElementById("promo").value == "PROMOGILA") {
-        alert(`Selamat Anda mendapatkan potongan harga 10%!`)
-        for (var i = 0 ; i < arrCart.length ; i++){
-            arrCart[i].total = arrCart[i].price * arrCart[i].qty
-        }
-        // Ambil List Cart
-        var listPayment = arrCart.map((val) => {
-            return `
-            <p>${val.id} || ${val.category} || ${val.name} || ${val.price} || ${val.qty} || ${val.total}</p>
-            `
-        })
-        // Perhitungan
-        var subTotal = 0
-        for (var i = 0 ; i < arrCart.length ; i++){
-            subTotal += arrCart[i].total
-        }
-        var ppn = subTotal * 0.1
-        var finalTotal = subTotal + ppn
-        var diskon = finalTotal * 0.1
-        var diskonTotal = finalTotal - (diskon) 
-        // Render Payment List
-        document.getElementById("Payment").innerHTML = 
-        listPayment.join("") + 
-        `<h3>SubTotal : ${subTotal}</h3>` + 
-        `<h3>PPN : ${ppn}</h3>` + 
-        `<h3>Total : ${finalTotal}</h3>` +
-        `<h3>Diskon 10% : -${diskon}</h3>` +
-        `<h3>Setelah Diskon : ${diskonTotal}</h3>` +
-        `<p>Kode Promo : <input type="text" id="promo" placeholder="Jika Ada"></p>` +
-        `<p><input type="button" value="Promo" onclick="funPromo()"></p>`   
-    } else {
-        alert(`Maaf kode yang anda pakai salah`)
+
+// Pembayaran
+
+var pembayaran = () => {
+
+    var bayar = parseInt(document.getElementById('bayar').value)
+    for (var i = 0 ; i < arrCart.length ; i++){
+        arrCart[i].total = arrCart[i].price * arrCart[i].qty
     }
+    // Ambil List Cart
+    var listPayment = arrCart.map((val) => {
+        return `
+        <p>${val.id} || ${val.category} || ${val.name} || ${val.price} || ${val.qty} || ${val.total}</p>
+        `
+    })
+    // Perhitungan
+    var subTotal = 0
+    for (var i = 0 ; i < arrCart.length ; i++){
+        subTotal += arrCart[i].total
+    }
+    var ppn = subTotal * 0.1
+    var finalTotal = subTotal + ppn 
+
+    var totalBayar = bayar - finalTotal
+
+    console.log(totalBayar);
+    
+
+
 }
 
 funRenderList(arrProduct)
