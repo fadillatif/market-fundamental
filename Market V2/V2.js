@@ -21,10 +21,10 @@ var fnRenderList = (data, idx) => {
                     <td><input id="priceEdit" type="text" value="${obj.price}"></td>
                     <td><input id="stockEdit" type="text" value="${obj.stock}"></td>
                     <td>
-                        <input onclick="funSave(${obj.id})" type="button" value="Save">
+                        <input onclick="fnSave(${obj.id})" type="button" value="Save">
                     </td>
                     <td>
-                        <input onclick="funEditCancel()" type="button" value="Cancel">
+                        <input onclick="fnEditCancel()" type="button" value="Cancel">
                     </td>
                 </tr>
             `
@@ -39,10 +39,10 @@ var fnRenderList = (data, idx) => {
                     <td>${obj.price}</td>
                     <td>${obj.stock}</td>
                     <td>
-                        <input onclick="funDelete(${obj.id})" type="button" value="Delete">
+                        <input onclick="fnDelete(${obj.id})" type="button" value="Delete">
                     </td>
                     <td>
-                        <input onclick="funEditCancel(${obj.id})" type="button" value="Edit">
+                        <input onclick="fnEditCancel(${obj.id})" type="button" value="Edit">
                     </td>
                 </tr>
             `
@@ -73,10 +73,10 @@ var fnRenderFilter = (data) => {
                 <td>${obj.price}</td>
                 <td>${obj.stock}</td>
                 <td>
-                    <input onclick="funDelete(${obj.id})" type="button" value="Delete">
+                    <input onclick="fnDelete(${obj.id})" type="button" value="Delete">
                 </td>
                 <td>
-                    <input onclick="funEditCancel(${obj.id})" type="button" value="Edit">
+                    <input onclick="fnEditCancel(${obj.id})" type="button" value="Edit">
                 </td>
             </tr>
         `

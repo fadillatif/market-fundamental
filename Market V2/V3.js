@@ -1,106 +1,105 @@
 var arrProduct = [
-    { id: 1579581080923,category: 'Fast Food' , name: "Noodle", price: 3500, stock : 9, status : 0},
-    { id: 1579581081130,category: 'Electronic' , name: "Headphone", price: 4300000, stock :8, status : 0 },
-    { id: 1579581081342,category: 'Cloth' , name: "Hoodie", price: 300000, stock :7, status : 0 },
-    { id: 1579581081577,category: 'Fruit' , name: "Apple", price: 10000, stock :8, status : 0 }
+    { id: 1579581080923,category: 'Fast Food' , name: "Noodle", price: 3500, stock : 9, qty : 0, total : 0},
+    { id: 1579581081130,category: 'Electronic' , name: "Headphone", price: 4300000, stock :8, qty : 0, total : 0},
+    { id: 1579581081342,category: 'Cloth' , name: "Hoodie", price: 300000, stock :7, qty : 0, total : 0},
+    { id: 1579581081577,category: 'Fruit' , name: "Apple", price: 10000, stock :8, qty : 0, total : 0}
 ];
 
 var arrCategory = ["All", "Fast Food", "Electronic", "Cloth", "Fruit"];
 
 var arrCart = []
 
+arrProduct.sort()
+
 // Render List
-var fnRenderList = (data, idx) => {
+var funRenderList = (data, idx) => {
     // Mapping product
-    // obj : {id, category, name, price, stock}
-    
     var resProduct = data.map((obj) => {
+        let SortNormal = (a , b) => {
+            if (a.price < b.price){
+                return -1
+            } else if (b.price < a.price){
+                return 1
+            } else {
+                return 0
+            }
+        }
+        data.sort(SortNormal)
         // jika id product sama dengan idx
         if(obj.id == idx){
             // Textbox
             return `
-            <tr>
-                    <td>${obj}</td>
-                    <td><input disabled type="text" value="${obj.category}"></td>
+                <tr>
+                    <td>${obj.id}</td>
+                    <td>${obj.category}</td>
                     <td><input id="nameEdit" type="text" value="${obj.name}"></td>
                     <td><input id="priceEdit" type="text" value="${obj.price}"></td>
                     <td><input id="stockEdit" type="text" value="${obj.stock}"></td>
                     <td>
                         <input disabled type="button" value="Add">
-                        </td>
-                    <td>
-                        <input onclick="fnSave(${obj.id})" type="button" value="Save">
                     </td>
                     <td>
-                        <input onclick="fnEditCancel()" type="button" value="Cancel">
-                        </td>
+                        <input onclick="funSave(${obj.id})" type="button" value="Save">
+                    </td>
+                    <td>
+                        <input onclick="funEditCancel()" type="button" value="Cancel">
+                    </td>
                 </tr>
             `
-        }  else if(obj.status == 1) {
-            // String
-              return `
-            <tr>
-                <td>${obj.id}</td>
-                <td>${obj.category}</td>
-                <td>${obj.name}</td>
-                <td>${obj.price}</td>
-                <td>${obj.stock}</td>
-                <td>
-                    <input onclick="fnAdd(${obj.id})" type="button" value="Add">
-                </td>
-                <td>
-                    <input disabled type="button" value="Delete">
-                </td>
-                <td>
-                    <input disabled type="button" value="Edit">
-                </td>
-            </tr>
-            `
-        }
-        else {
+        } else if (obj.qty > 0) {
             return `
-            <tr>
-                <td>${obj.id}</td>
-                <td>${obj.category}</td>
-                <td>${obj.name}</td>
-                <td>${obj.price}</td>
-                <td>${obj.stock}</td>
-                <td>
-                    <input onclick="fnAdd(${obj.id})" type="button" value="Add">
-                </td>
-                <td>
-                    <input onclick="fnDelete" type="button" value="Delete">
-                </td>
-                <td>
-                    <input onclick="fnEdit" type="button" value="Edit">
-                </td>
-            </tr>
+                <tr>
+                    <td>${obj.id}</td>
+                    <td>${obj.category}</td>
+                    <td>${obj.name}</td>
+                    <td>${obj.price}</td>
+                    <td>${obj.stock}</td>
+                    <td>
+                        <input onclick="funAdd(${obj.id})" type="button" value="Add">
+                    </td>
+                    <td>
+                        <input disabled type="button" value="Delete">
+                    </td>
+                    <td>
+                        <input onclick="funEditCancel(${obj.id})" type="button" value="Edit">
+                    </td>
+                </tr>
+            `
+        } else {
+            // String
+            return `
+                <tr>
+                    <td>${obj.id}</td>
+                    <td>${obj.category}</td>
+                    <td>${obj.name}</td>
+                    <td>${obj.price}</td>
+                    <td>${obj.stock}</td>
+                    <td>
+                        <input onclick="funAdd(${obj.id})" type="button" value="Add">
+                    </td>
+                    <td>
+                        <input onclick="funDelete(${obj.id})" type="button" value="Delete">
+                    </td>
+                    <td>
+                        <input onclick="funEditCancel(${obj.id})" type="button" value="Edit">
+                    </td>
+                </tr>
             `
         }
-
-        
     })
-
     // Mapping category
-    // val : "All" atau "Fast Food" atau "Cloth" dll
     var resCategory = arrCategory.map((val) => {
         return `<option>${val}</option>`
     })
-
     // render product
     document.getElementById('render').innerHTML = resProduct.join("")
-
     // render category
     document.getElementById('catFilter').innerHTML = resCategory
     document.getElementById('catInput').innerHTML = resCategory
 }
 
 // Render Cart
-var fnRenderCart = () => {
-    // Mapping cart
-    // obj = {id, category, name, price, stock}
-    // akses nama = obj.name
-    // akses harga = obj.price
+var funRenderCart = () => {
     var listCart = arrCart.map((obj) => {
         return `
             <tr>
@@ -110,18 +109,16 @@ var fnRenderCart = () => {
                 <td>${obj.price}</td>
                 <td>${obj.qty}</td>
                 <td>
-                    <input onclick="fnDeleteCart(${obj.id})" type="button" value="Delete">
+                    <input onclick="funDeleteCart(${obj.id})" type="button" value="Delete">
                 </td>
             </tr>
         `
     })
-
-    document.getElementById('cart').innerHTML = listCart.join('')
-
+    document.getElementById("cart").innerHTML = listCart.join("")
 }
 
 // Render Filter
-var fnRenderFilter = (data) => {
+var funRenderFilter = (data) => {
     var resProduct = data.map((obj) => {
         return `
             <tr>
@@ -131,10 +128,10 @@ var fnRenderFilter = (data) => {
                 <td>${obj.price}</td>
                 <td>${obj.stock}</td>
                 <td>
-                    <input onclick="funDelete(${obj.id})" type="button" value="Delete">
+                    <input onclick="funAddRender(${obj.id})" type="button" value="Add">
                 </td>
                 <td>
-                    <input onclick="fnAdd(${obj.id})" type="button" value="Add">
+                    <input onclick="funDelete(${obj.id})" type="button" value="Delete">
                 </td>
                 <td>
                     <input onclick="funEditCancel(${obj.id})" type="button" value="Edit">
@@ -142,38 +139,39 @@ var fnRenderFilter = (data) => {
             </tr>
         `
     })
-
     // render product
     document.getElementById('render').innerHTML = resProduct.join("")
 }
+            
+// Input Data
+var funInputData = () => {
 
-// Input data
-var fnInputData = () => {
     // Ambil data
     var name = document.getElementById("name").value
     var price = parseInt(document.getElementById("price").value)
     var stock = parseInt(document.getElementById("stock").value)
     var category = document.getElementById("catInput").value
     var time = new Date()
-
+    
     // Push ke object
     arrProduct.push({
         id: time.getTime(),
         name : name,
         price: price,
         stock : stock,
-        category: category
+        category: category,
+        qty : 0
     })
-
+    
     // Render product
-    fnRenderList(arrProduct)
+    funRenderList(arrProduct)
+
 }
 
-// Filter name
-var fnFilterName = () => {
+// Filter Name
+var funFilterName = () => {
     // Ambil data
     var keyword = document.getElementById("keyword").value // N
-
     // Filter data
     // val = { name: "Noodle", price: 3500, stock : 9}
     var filterResult = arrProduct.filter((val) => {
@@ -185,23 +183,19 @@ var fnFilterName = () => {
         // noodle -> n
         return prodName.includes(keyword)
     })
-
     // Render data
-    fnRenderFilter(filterResult)
-
+    funRenderFilter(filterResult)
 }
 
-// Filter price
-var fnFilterPrice = () => {
+// Filter Price
+var funFilterPrice = () => {
     // Ambil data
     var min = document.getElementById('min').value
     var max = document.getElementById('max').value
     var filterResult = arrProduct
-
     // Cek kedua textbox, apakah sudah terisi keduanya
     // Jika terisi keduanya, lakukan filter
     // Jika salah satu kosong, tidak lakukan filter
-
     if( !( min == "" || max == "" ) ){
         // filtering
         // val = { category: 'Fast Food', name: "Noodle"}
@@ -209,17 +203,15 @@ var fnFilterPrice = () => {
             return val.price >= min && val.price <= max
         })
     } 
-
     // Render data
-    fnRenderFilter(filterResult)
+    funRenderFilter(filterResult)
 }
 
-// Filter category
-var fnFilterCategory = () => {
+// Filter Category
+var funFilterCategory = () => {
     // Ambil data
     var selected = document.getElementById("catFilter").value
     var filterResult = arrProduct
-
     // Filter data
     // selected = "All"
     // val = { category: 'Electronic' , name: "Headphone"}
@@ -230,160 +222,212 @@ var fnFilterCategory = () => {
     }
 
     // Render data
-    fnRenderFilter(filterResult)
+    funRenderFilter(filterResult)
 }
 
 // Button Delete
-var fnDelete = (idx) => {
+var funDelete = (idx) => {
+
     // Delete berdasarkan id
     arrProduct = arrProduct.filter((val) => {
         return val.id != idx
     })
-
+    
     // Render data
-    fnRenderList(arrProduct)
-
+    funRenderList(arrProduct)
+    
 }
 
 // Button Edit and Cancel
-var fnEditCancel = (idx) => {
+var funEditCancel = (idx) => {
     // Change to text box
-    fnRenderList(arrProduct, idx)
+    funRenderList(arrProduct, idx)
 }
 
 // Button Save
-var fnSave = (idx) => {
+var funSave = (idx) => {
     // Ambil data
     var name = document.getElementById("nameEdit").value
     var price = parseInt(document.getElementById("priceEdit").value)
     var stock = parseInt(document.getElementById("stockEdit").value)
 
+    // coba kode
+    var foundIdx = arrProduct.find((val) => {return val.id == idx})
+
+    foundIdx.name = name
+    foundIdx.price = price
+    foundIdx.stock = stock
+
     // Cari indexnya
-    var foundIdx = arrProduct.findIndex((val) => {
-        return val.id == idx
-    })
+    // var foundIdx = arrProduct.findIndex((val) => {
+    //     return val.id == idx
+    // })
+    // // Replace data lama
+    // arrProduct[foundIdx] = {
+    //     ...arrProduct[foundIdx],
+    //     name: name,
+    //     price : price,
+    //     stock: stock,
+    // }
 
-    // Replace data lama
-    arrProduct[foundIdx] = {
-        ...arrProduct[foundIdx],
-        name: name,
-        price : price,
-        stock: stock,
-        harga: 40000
-    }
-
+    // // Replace stock cart
+    // if (arrCart != "") {
+    // var selectedCart = arrCart.find((val) => {return val.id == idx})
+    // selectedCart.stock = stock
+    // }
     // Render data
-    fnRenderList(arrProduct)
+    funRenderList(arrProduct)
 }
 
-// Button delete cart
-var fnDeleteCart = (idx) => {
-//     // Delete berdasarkan id
-//     arrCart = arrCart.filter((val) => {
-//        return val.id != idx
-//    })
-    // backstok : arrproduct
+// Button Delete Cart (OnWork)
+var funDeleteCart = (idx) => {
+    // Delete satu persatu
+    // mengembalikan jumlah stock
     var selectedProduct = arrProduct.find((val) => {return val.id == idx})
-    var foundCart = arrCart.find((val) => {return val.id == idx})
-    // var backStock = foundCart.qty + selectedProduct.stock 
+    if (selectedProduct.qty > 0){
+        selectedProduct.qty --
+        selectedProduct.stock ++
+    } 
+    if (selectedProduct.qty == 0) {
+        arrCart = arrCart.filter((val) => {
+            return val.id != idx
+        })
+    } 
 
-    // selectedProduct.stock = backStock
-   if(foundCart.qty > 0){
-       foundCart.qty --
-       selectedProduct.stock ++
-   }
-   if(foundCart.qty == 0 ){
-    selectedProduct.status = 0
-    arrCart = arrCart.filter((val) => {
-        return val.id != idx
-    })  
-   }
+    // Delete sekaligus
+    // var changeStock = selectedProduct.qty + selectedProduct.stock
+    // selectedProduct.stock = changeStock
+    // selectedProduct.qty = 0 
+    // // Delete berdasarkan id
+    // arrCart = arrCart.filter((val) => {
+    //     return val.id != idx
+    // })
 
-
-   // Render data
-   fnRenderCart()
-   fnRenderList(arrProduct)
-
+    funRenderCart()
+    funRenderList(arrProduct)
 }
 
-// Button add
-var fnAdd = (idx) => {
-   // temukan product terpilih di arrProduct
-   var selectedProduct = arrProduct.find((val) => {return val.id == idx})
-   
-    // Cek apakah sudah ada di cart ?
-    // temukan product terpilih di arrCart
-    // Jika tidak ditemukan, akan me return 'undefined'
-    var foundCart = arrCart.find((val) => {return val.id == idx})
-
-    // Jika product terpilih tidak ada di dalam cart
-    if(foundCart == undefined){
-        // tambahkan product tersebut ke cart
-        arrCart.push({...selectedProduct, qty : 1})
-        selectedProduct.stock -- 
-        selectedProduct.status = 1
-
-        
-    } else {
-        // Temukan index product terpilih di arrCart
-        var foundIdx = arrCart.findIndex(val => val.id == idx)
-        
-        
-        // Update qty
-        // arrCart[foundIdx] = {id, category, name, price, stock, qty}
-        
-        if (selectedProduct.stock > 0 ) {
-            arrCart[foundIdx].qty ++
-            
-            selectedProduct.stock--
-            // var stockKurang = arrProduct.map((val) => {
-            // return val
-            // })
-
-            // console.log(stockKurang[foundIdx].stock--);
-            // var stockKurangKurang = [...arrProduct, stock: stockKurang[foundIdx].stock--]
-            
-            // console.log(stockKurang);
-            
-        } else{
-            alert(`stok tidak mencukupi`)
-
-        }
-    // if(arrCart[foundIdx].qty > arrProduct[foundIdx].stock){
-    // }        
-        
+// Button Add
+var funAdd = (idx) => {
+    // temukan product terpilih
+    var selectedProduct = arrProduct.find((val) => {return val.id == idx})
+    if (selectedProduct.stock < 1){
+        alert("stock habis!")
+        return "disabled"
     }
+    if (selectedProduct.qty == 0){
+        // menambahkan jumlah quantity
+        selectedProduct.qty ++ 
+        // tambahkan product tersebut ke array Cart
+        arrCart.push(selectedProduct)
+    } else {
+        selectedProduct.qty ++
+    }
+    // mengurangi stock dengan quantity
+    selectedProduct.stock --
+    // Disabled tombol delete
+    var resProduct = 
+    // render list
+    funRenderList(arrProduct)
+    // render cart
+    funRenderCart()
+}
 
-   
-   // render cart
-   fnRenderCart()
-   fnRenderList(arrProduct)
+// Button Add Render
+var funAddRender = (idx) => {
+    var selectedProduct = arrProduct.find((val) => {return val.id == idx})
+    // var selectedCart = arrCart.find((val) => {return val.id == idx})
+    if (selectedProduct.stock < 1){
+        alert("stock habis!")
+        return disabled
+    }
+    if (selectedProduct.qty == 0){
+        selectedProduct.qty ++
+        arrCart.push(selectedProduct)
+    } else {
+        selectedProduct.qty ++
+    }
+    selectedProduct.stock --
+    funRenderCart()
+    if (document.getElementById("keyword").value != ""){
+        funFilterName()
+    }
+    if (document.getElementById("min").value != "" && document.getElementById("max").value !=""){
+        funFilterPrice()
+    }
+    if (document.getElementById("catFilter").value != "All"){
+        funFilterCategory()
+    }
 }
 
 // Button Payment
-var fnPayment = () => {
-    //  Bikin list
-    var listPayment = arrCart.map((val) => {
-        return `<p>${val.id} | ${val.category} | ${val.name} | ${val.price} x ${val.qty} = ${val.price * val.qty}</p> `
-    })
-
-    //  Hitung total awal, ppn, total akhir
-    var subTotal = 0
-    for(var i = 0; i < arrCart.length; i++){
-        subTotal += arrCart[i].price * arrCart[i].qty
+var funPayment = () => {
+    for (var i = 0 ; i < arrCart.length ; i++){
+        arrCart[i].total = arrCart[i].price * arrCart[i].qty
     }
-
+    // Ambil List Cart
+    var listPayment = arrCart.map((val) => {
+        return `
+        <p>${val.id} || ${val.category} || ${val.name} || ${val.price} || ${val.qty} || ${val.total}</p>
+        `
+    })
+    // Perhitungan
+    var subTotal = 0
+    for (var i = 0 ; i < arrCart.length ; i++){
+        subTotal += arrCart[i].total
+    }
     var ppn = subTotal * 0.1
-    var finalTotal = subTotal + ppn
-
-    //  tampilkan total awal, ppn, total akhir
-    var listDetail = listPayment.join('')
-    var listTotal = `<h3>Subtotal :Rp ${subTotal.toLocaleString(`in`)}</h3><h3>ppn : ${ppn.toLocaleString(`in`)}</h3><h3>Final :Rp ${finalTotal.toLocaleString(`in`)}</h3>`
-    var finalList = listDetail + listTotal
-    document.getElementById('payment').innerHTML = finalList
-
+    var finalTotal = subTotal + ppn 
+    // Render Payment List
+    document.getElementById("Payment").innerHTML = 
+    listPayment.join("") + 
+    `<h3>SubTotal : ${subTotal}</h3>` + 
+    `<h3>PPN : ${ppn}</h3>` + 
+    `<h3>Total : ${finalTotal}</h3>` +
+    `<p>Kode Promo : <input type="text" id="promo" placeholder="Jika Ada"></p>` +
+    `<p><input type="button" value="Promo" onclick="funPromo()"></p>`
 }
 
+// Kode Promo
+var funPromo = () => {
+    if(document.getElementById("promo").value == "PROMOGILA") {
+        alert(`Selamat Anda mendapatkan potongan harga 10%!`)
+        for (var i = 0 ; i < arrCart.length ; i++){
+            arrCart[i].total = arrCart[i].price * arrCart[i].qty
+        }
+        // Ambil List Cart
+        var listPayment = arrCart.map((val) => {
+            return `
+            <p>${val.id} || ${val.category} || ${val.name} || ${val.price} || ${val.qty} || ${val.total}</p>
+            `
+        })
+        // Perhitungan
+        var subTotal = 0
+        for (var i = 0 ; i < arrCart.length ; i++){
+            subTotal += arrCart[i].total
+        }
+        var ppn = subTotal * 0.1
+        var finalTotal = subTotal + ppn
+        var diskon = finalTotal * 0.1
+        var diskonTotal = finalTotal - (diskon) 
+        // Render Payment List
+        document.getElementById("Payment").innerHTML = 
+        listPayment.join("") + 
+        `<h3>SubTotal : ${subTotal}</h3>` + 
+        `<h3>PPN : ${ppn}</h3>` + 
+        `<h3>Total : ${finalTotal}</h3>` +
+        `<h3>Diskon 10% : -${diskon}</h3>` +
+        `<h3>Setelah Diskon : ${diskonTotal}</h3>` +
+        `<p>Kode Promo : <input type="text" id="promo" placeholder="Jika Ada"></p>` +
+        `<p><input type="button" value="Promo" onclick="funPromo()"></p>`   
+    } else {
+        alert(`Maaf kode yang anda pakai salah`)
+    }
+}
+
+funRenderList(arrProduct)
 
 
-fnRenderList(arrProduct)
+
+
+
