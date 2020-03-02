@@ -7,26 +7,21 @@
 
         <title>C A R I A P A ?</title>
 
-        <style>
-            table, td, th {
-                border: 2px solid black;
-                border-collapse: collapse;
-                padding: 10px;
-            }
-        </style>
-
         <script defer src="V3.js"></script>
+        <link rel="stylesheet" href="V3.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono|Trade+Winds&display=swap" rel="stylesheet">
 
     </head>
 
-    <body>
-
-        <h1 style="text-align: center;">minimini</h1>
+    <body class="background">
         
+
+        <h1 id="google-font">minimini mart</h1>  
+              
         <form>
 
             <!-- FILTER -->
-            <fieldset>
+            <fieldset id="box-filter">
                 <legend>Filter</legend>
                 <p>Nama : <input oninput="funFilterName()" type="text" id="keyword"></p>
                 <p>Harga: <input oninput="funFilterPrice()" type="number" id="min"> - <input oninput="funFilterPrice()" type="number" id="max"></p>
